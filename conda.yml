@@ -1,0 +1,25 @@
+name: padhana
+channels:
+- conda-forge
+- defaults
+dependencies:
+  - python=3.6
+  - pip
+  - pytest=4.0.2
+  - pytest-runner
+  - setuptools=40.5.0
+  - conda-build
+  - twine=1.10.0
+  - click
+  - pyfiglet
+  - colorama
+  - termcolor
+  - six
+  - requests
+  - flask
+  - sphinx
+  - numpy
+  - pip:
+    - pdfminer.six
+    - beautifulsoup4
+    - sphinx_rtd_theme

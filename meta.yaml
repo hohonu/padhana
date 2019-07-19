@@ -1,0 +1,20 @@
+package:
+  name: padhana
+  version: {{ environ['VERSION'] }}
+
+source:
+  path: .
+
+build:
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+  noarch: generic
+
+requirements:
+  host:
+    - python
+    - setuptools
+  run:
+    - python
+
+about:
+  home: https://www.github.com/hohonu/padhana
