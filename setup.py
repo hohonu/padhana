@@ -16,9 +16,4 @@ setup(name='padhana',
       packages=['padhana', 'padhana.analysis', 'padhana.connectors', 'padhana.core', 'padhana.parsers',
                 'padhana.stores', 'padhana.model'],
       setup_requires=["pytest-runner"],
-      tests_require=["pytest"],
-      entry_points={
-          'console_scripts': [
-              'padhana = padhana.cli.cli:main'
-          ]
-      })
+      tests_require=["pytest"])
