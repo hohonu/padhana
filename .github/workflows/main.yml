@@ -5,14 +5,11 @@ on: [push]
 jobs:
   build:
 
-    docker:
-      # specify the version you desire here
-      - image: hohonu/python-build-container
-    
     steps:
     - uses: actions/checkout@v1
     - run:
         name: Build
+        uses: docker://hohonu/python-build-container
         command: |
           . /opt/conda/etc/profile.d/conda.sh && conda update conda -y
           . /opt/conda/etc/profile.d/conda.sh && conda env create -f conda.yml  && conda activate kish && python setup.py test bdist_wheel
