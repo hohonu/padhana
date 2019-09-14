@@ -1,0 +1,17 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    steps:
+    - uses: actions/checkout@v1
+    - run:
+        name: Build
+        uses: docker://hohonu/python-build-container
+        command: |
+          . /opt/conda/etc/profile.d/conda.sh && conda update conda -y
+          . /opt/conda/etc/profile.d/conda.sh && conda env create -f conda.yml  && conda activate kish && python setup.py test bdist_wheel
+          . /opt/conda/etc/profile.d/conda.sh && conda env create -f conda.yml --force  && conda activate padhana && python setup.py test bdist_wheel && twine upload --repository-url https://push.fury.io/hohonu dist/* -u $DEPLOY_TOKEN -p ''
+
