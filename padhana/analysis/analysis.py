@@ -366,6 +366,11 @@ class Page:
         current_content_area_lines = []
         current_content_area_text_nodes = []
 
+        if page_statistics.updated_mean_line_space_height is None:
+            print('hello')
+        if self.statistics.updated_mean_height is None:
+            print('hello')
+
         for line in initial_content_area_lines:
             if len(line.as_string().strip()) > 0:
                 line_statistics = NodeStatistics(line.text_nodes)
@@ -565,10 +570,10 @@ class NodeStatistics:
         # Remove outliers by only getting the data within 1 standard deviation
         # Get the mean again
 
-        self.updated_mean_space_width = None
-        self.updated_mean_width = None
-        self.updated_mean_height = None
-        self.updated_mean_line_space_height = None
+        self.updated_mean_space_width = 0.0
+        self.updated_mean_width = 0.0
+        self.updated_mean_height = 0.0
+        self.updated_mean_line_space_height = 0.0
 
         if len(widths) > 0 and len(heights) > 0:
             self.mean_y = np.mean(ys)
@@ -587,11 +592,9 @@ class NodeStatistics:
 
         if len(line_space_heights):
             self.mean_line_space_height = np.mean(line_space_heights)
-
             updated_line_space_heights = [h for h in line_space_heights if h >= self.updated_mean_height * 0.75]
-
-            if len(updated_line_space_heights) > 0:
-                self.updated_mean_line_space_height = min(updated_line_space_heights)
+            self.updated_mean_line_space_height = min(updated_line_space_heights) \
+                if len(updated_line_space_heights) > 0 else 0.0
 
         self.updated_mean_space_width = np.mean(char_spaces) if len(char_spaces) > 0 else 0.0
 

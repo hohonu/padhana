@@ -121,6 +121,21 @@ def test_mifir_qas():
     assert(page.content_areas[4].features.image_node)
 
 
+def test_emir_qas():
+    filename =  'EMIR_QAs_20190204'
+    text_layout_analysis = get_text_layout_analysis(filename)
+
+    page_index_list = range(0, 8)
+    for page_index in page_index_list:
+        page = text_layout_analysis.pages[page_index]
+        print_page_details(page)
+
+    page_index_list = range(0,8)
+    for page_index in page_index_list:
+        page = text_layout_analysis.pages[page_index]
+        print_page_details(page)
+
+
 def test_table_code():
     filename =  'MIFIR_QAs_table_sample_p21'
     text_layout_analysis = get_text_layout_analysis(filename)
