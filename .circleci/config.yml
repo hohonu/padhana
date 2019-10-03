@@ -21,5 +21,5 @@ jobs:
           command: |
             . /opt/conda/etc/profile.d/conda.sh && conda update conda -y
             . /opt/conda/etc/profile.d/conda.sh && conda env create -f conda.yml  && conda activate padhana && python setup.py test bdist_wheel
-            . /opt/conda/etc/profile.d/conda.sh && conda env create -f conda.yml --force  && conda activate padhana && python setup.py test bdist_wheel && twine upload 
+            . /opt/conda/etc/profile.d/conda.sh && conda env create -f conda.yml --force  && conda activate padhana && python setup.py test bdist_wheel && twine upload dist/*
      

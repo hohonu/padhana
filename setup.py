@@ -11,6 +11,7 @@ setup(name='padhana',
       version=version,
       description='Padhana',
       author='Philip Dodds',
+      description='PDF document parsing and analysis'
       author_email='philip@hohonu.com',
       url='https://www.github.com/hohonu/padhana',
       packages=['padhana', 'padhana.analysis', 'padhana.connectors', 'padhana.core', 'padhana.parsers',
