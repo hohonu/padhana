@@ -249,14 +249,14 @@ class Page:
         initial_content_area_lines = self.check_for_text_columns()
 
         # Check for superscripts - if found, merge with the line after it
+        # Will leave the superscripts where they are
         superscript_lines = [(l_idx, l) for l_idx, l in enumerate(initial_content_area_lines)
-                             if l.as_string().isdigit()]
+                             if l.as_string().isdigit() and
+                             l.get_height() < self.statistics.updated_mean_height * 0.75]
 
-        index_to_delete = []
         for index_and_line in superscript_lines:
             l_idx = index_and_line[0]
             line = index_and_line[1]
-            index_to_delete.append(l_idx)
             next_line = initial_content_area_lines[l_idx + 1] \
                 if l_idx < len(initial_content_area_lines) - 1 else None
 
@@ -266,11 +266,6 @@ class Page:
                 new_next_line = Line(new_text_nodes)
                 new_next_line.build_words()
                 initial_content_area_lines[l_idx + 1] = new_next_line
-
-        # Remove all superscript_lines (since they have already been merged with the line after it)
-        if len(superscript_lines) > 0:
-            for i in reversed(index_to_delete):
-                del(initial_content_area_lines[i])
 
         # Next, group these lines into content areas
         if len(initial_content_area_lines) > 0:

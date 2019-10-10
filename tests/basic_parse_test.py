@@ -153,3 +153,12 @@ def test_china_reg():
         print(line.as_string())
     page = text_layout_analysis.pages[0]
 
+
+def test_prospectus():
+    filename = 'FRS189 Pricing Supplement 20190301'
+    text_layout_analysis = get_text_layout_analysis(filename)
+
+    page_index_list = range(0,2)
+    for page_index in page_index_list:
+        page = text_layout_analysis.pages[page_index]
+        print_page_details(page)
