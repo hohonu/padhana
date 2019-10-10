@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-<?xml version="1.0" encoding="utf-8"?><testsuite errors="0" failures="0" name="pytest" skips="0" tests="1" time="13.853"><testcase classname="tests.basic_parse_test" file="tests/basic_parse_test.py" line="156" name="test_prospectus" time="13.364786863327026"><system-out>Parsing PDF /Users/audodds/src/hohonu/padhana/tests/../test_documents/FRS189 Pricing Supplement 20190301.pdf
+<?xml version="1.0" encoding="utf-8"?><testsuite errors="0" failures="0" name="pytest" skips="0" tests="1" time="12.212"><testcase classname="tests.basic_parse_test" file="tests/basic_parse_test.py" line="30" name="test_prospectus" time="11.458433866500854"><system-out>Parsing PDF /Users/audodds/src/hohonu/padhana/tests/../test_documents/FRS189 Pricing Supplement 20190301.pdf
 --------------------------------- NEW PAGE --------------------------------
 --------------------------------- CONTENT AREA --------------------------------- 
 This content area has an image
@@ -505,6 +504,3 @@ As stated in the Terms and Conditions
 
 
 </system-out></testcase></testsuite>
-=======
-<?xml version="1.0" encoding="utf-8"?><testsuite errors="0" failures="0" name="pytest" skips="0" tests="0" time="263.520"><testcase time="0.0003628730773925781"></testcase></testsuite>
->>>>>>> 9db4e3c059d1812698cc1e60bca479dee504c07f
