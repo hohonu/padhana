@@ -1,6 +1,6 @@
 import os
 
-from padhana.analysis import TextLayoutAnalysis, OutlineAnalysis
+from padhana.analysis import TextLayoutAnalysis, LineLayoutAnalysis
 from padhana.parsers import PdfMinerParser
 
 
@@ -13,6 +13,13 @@ def get_text_layout_analysis(filename):
     document = parser.parse_file(str(get_test_directory()) + filename + '.pdf')
     text_layout_analysis = TextLayoutAnalysis(document)
     return text_layout_analysis
+
+
+def get_line_layout_analysis(filename):
+    parser = PdfMinerParser()
+    document = parser.parse_file(str(get_test_directory()) + filename + '.pdf')
+    line_layout_analysis = LineLayoutAnalysis(document)
+    return line_layout_analysis
 
 
 def print_page_details(page):
@@ -29,10 +36,20 @@ def print_page_details(page):
 
 
 def test_prospectus():
-    filename = 'FRS189 Pricing Supplement 20190301'
+    # filename = 'FRS189 Pricing Supplement 20190301'
+    # filename = 'GRT30 Pricing Supplement 20181210.pdf-ocr'
+    filename = 'CLN552 Pricing Supplement 20181214.pdf-ocr'
     text_layout_analysis = get_text_layout_analysis(filename)
 
     page_index_list = range(0,2)
     for page_index in page_index_list:
         page = text_layout_analysis.pages[page_index]
+        print_page_details(page)
+
+
+def test_distribution():
+    filename = 'Distribution Sample'
+    line_layout_analysis = get_line_layout_analysis(filename)
+
+    for page in line_layout_analysis.pages:
         print_page_details(page)

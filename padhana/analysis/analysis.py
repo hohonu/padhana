@@ -3,15 +3,7 @@ import numpy as np
 from padhana.core import DocumentQueryContext, ContentNode, Document, AttributeDict
 
 
-class TextLayoutAnalysis:
-
-    def __init__(self, document):
-        self.document = document
-        self.query_context = DocumentQueryContext(document)
-        self.all_raw_pages = self.query_context.root.findall(type_re='^page$')
-        self.pages = []
-
-        self.build_pages()
+class BaseLayoutAnalysis:
 
     def build_pages(self):
         # We will start by creating a content area with all the text in it
@@ -21,7 +13,7 @@ class TextLayoutAnalysis:
         # for page_index in page_index_list:
         for page_index in range(len(self.all_raw_pages)):
             raw_page = self.all_raw_pages[page_index]
-            self.pages.append(Page(raw_page))
+            self.pages.append(Page(raw_page, self))
 
     def get_structure(self):
         result = ContentNode(type='root')
@@ -43,6 +35,28 @@ class TextLayoutAnalysis:
 
     def get_document(self):
         return Document(self.document.metadata, self.get_structure())
+
+
+class LineLayoutAnalysis(BaseLayoutAnalysis):
+
+    def __init__(self, document):
+        self.document = document
+        self.query_context = DocumentQueryContext(document)
+        self.all_raw_pages = self.query_context.root.findall(type_re='^page$')
+        self.pages = []
+
+        self.build_pages()
+
+
+class TextLayoutAnalysis(BaseLayoutAnalysis):
+
+    def __init__(self, document):
+        self.document = document
+        self.query_context = DocumentQueryContext(document)
+        self.all_raw_pages = self.query_context.root.findall(type_re='^page$')
+        self.pages = []
+
+        self.build_pages()
 
 
 class Word:
@@ -228,7 +242,7 @@ class Page:
 
     """
 
-    def __init__(self, page_node):
+    def __init__(self, page_node, parent):
         self.node = page_node
         self.width = page_node.get_width()
         self.height = page_node.get_height()
@@ -244,28 +258,17 @@ class Page:
         self.statistics = NodeStatistics(non_space_text_nodes)
 
         self.content_areas = []
+
         # First, check if there is a bit with 2 columns as opposed to just 1
         # The order of the lines will vary based on this information
-        initial_content_area_lines = self.check_for_text_columns()
+        if isinstance(parent, TextLayoutAnalysis):
+            initial_content_area_lines = self.check_for_text_columns()
+        else:
+            initial_content_area_lines = ContentArea(self.text_nodes).lines
 
         # Check for superscripts - if found, merge with the line after it
         # Will leave the superscripts where they are
-        superscript_lines = [(l_idx, l) for l_idx, l in enumerate(initial_content_area_lines)
-                             if l.as_string().isdigit() and
-                             l.get_height() < self.statistics.updated_mean_height * 0.75]
-
-        for index_and_line in superscript_lines:
-            l_idx = index_and_line[0]
-            line = index_and_line[1]
-            next_line = initial_content_area_lines[l_idx + 1] \
-                if l_idx < len(initial_content_area_lines) - 1 else None
-
-            # Combine the two lines
-            if next_line:
-                new_text_nodes = line.text_nodes + next_line.text_nodes
-                new_next_line = Line(new_text_nodes)
-                new_next_line.build_words()
-                initial_content_area_lines[l_idx + 1] = new_next_line
+        initial_content_area_lines = self.check_for_superscripts(initial_content_area_lines)
 
         # Next, group these lines into content areas
         if len(initial_content_area_lines) > 0:
@@ -350,6 +353,27 @@ class Page:
         initial_content_area_lines.extend(second_column_lines)
 
         return initial_content_area_lines
+
+    def check_for_superscripts(self, initial_content_area_lines):
+        superscript_lines = [(l_idx, l) for l_idx, l in enumerate(initial_content_area_lines)
+                             if l.as_string().isdigit() and
+                             l.get_height() < self.statistics.updated_mean_height * 0.75]
+
+        for index_and_line in superscript_lines:
+            l_idx = index_and_line[0]
+            line = index_and_line[1]
+            next_line = initial_content_area_lines[l_idx + 1] \
+                if l_idx < len(initial_content_area_lines) - 1 else None
+
+            # Combine the two lines
+            if next_line:
+                new_text_nodes = line.text_nodes + next_line.text_nodes
+                new_next_line = Line(new_text_nodes)
+                new_next_line.build_words()
+                initial_content_area_lines[l_idx + 1] = new_next_line
+
+        return initial_content_area_lines
+
 
     def group_lines_to_content_areas(self, initial_content_area_lines):
         page_statistics = NodeStatistics(initial_content_area_lines)
