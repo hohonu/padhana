@@ -53,3 +53,11 @@ def test_distribution():
 
     for page in line_layout_analysis.pages:
         print_page_details(page)
+
+
+def test_semantic_ontology():
+    filename = 'OFSAA_DD_E16101_01'
+    line_layout_analysis = get_line_layout_analysis(filename)
+
+    for page in line_layout_analysis.pages[0:5]:
+        print_page_details(page)

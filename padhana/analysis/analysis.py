@@ -374,7 +374,6 @@ class Page:
 
         return initial_content_area_lines
 
-
     def group_lines_to_content_areas(self, initial_content_area_lines):
         page_statistics = NodeStatistics(initial_content_area_lines)
 
@@ -393,11 +392,14 @@ class Page:
         for line in initial_content_area_lines:
             if len(line.as_string().strip()) > 0:
                 line_statistics = NodeStatistics(line.text_nodes)
-                if abs(last_x_y_height[1] - line_statistics.mean_y) > \
-                        page_statistics.updated_mean_line_space_height * 1.25 or \
-                        abs(last_x_y_height[2] - line_statistics.updated_mean_height) > \
-                        0.05 * max(last_x_y_height[2], line_statistics.updated_mean_height) and not \
-                        (last_line.as_string().isdigit() and
+                if (last_x_y_height[1] and line_statistics.mean_y and \
+                        page_statistics.updated_mean_line_space_height and \
+                        abs(last_x_y_height[1] - line_statistics.mean_y) > \
+                        page_statistics.updated_mean_line_space_height * 1.25) or \
+                        (last_x_y_height[2] and line_statistics.updated_mean_height and
+                         abs(last_x_y_height[2] - line_statistics.updated_mean_height) >
+                         0.05 * max(last_x_y_height[2], line_statistics.updated_mean_height)) and not \
+                        (last_line.as_string().isdigit() and self.statistics.updated_mean_height and
                          last_line.text_nodes[0].get_height() <= 0.75 * self.statistics.updated_mean_height):
                     # If the spacing is more than the updated_mean_height
                     # Or if the font heights are different (more than 95% diff)
