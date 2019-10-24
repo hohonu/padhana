@@ -375,27 +375,22 @@ class Page:
         return initial_content_area_lines
 
     def group_lines_to_content_areas(self, initial_content_area_lines):
-        page_statistics = NodeStatistics(initial_content_area_lines)
+        page_line_statistics = NodeStatistics(initial_content_area_lines)
 
         last_line = initial_content_area_lines[0]
-        last_line_statistics = NodeStatistics(last_line.text_nodes)
+        last_line_statistics = last_line.statistics
         last_x_y_height = [initial_content_area_lines[0].get_x(), initial_content_area_lines[0].get_y(),
                            last_line_statistics.updated_mean_height]
         current_content_area_lines = []
         current_content_area_text_nodes = []
 
-        if page_statistics.updated_mean_line_space_height is None:
-            print('hello')
-        if self.statistics.updated_mean_height is None:
-            print('hello')
-
         for line in initial_content_area_lines:
             if len(line.as_string().strip()) > 0:
-                line_statistics = NodeStatistics(line.text_nodes)
+                line_statistics = line.statistics
                 if (last_x_y_height[1] and line_statistics.mean_y and \
-                        page_statistics.updated_mean_line_space_height and \
+                        page_line_statistics.updated_mean_line_space_height and \
                         abs(last_x_y_height[1] - line_statistics.mean_y) > \
-                        page_statistics.updated_mean_line_space_height * 1.25) or \
+                        page_line_statistics.updated_mean_line_space_height * 1.5) or \
                         (last_x_y_height[2] and line_statistics.updated_mean_height and
                          abs(last_x_y_height[2] - line_statistics.updated_mean_height) >
                          0.05 * max(last_x_y_height[2], line_statistics.updated_mean_height)) and not \
