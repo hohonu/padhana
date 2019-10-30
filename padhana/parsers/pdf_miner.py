@@ -121,7 +121,7 @@ class ContentNodeConverter(PDFConverter):
 
 class PdfMinerParser:
 
-    def parse_file(self, pdf_path):
+    def parse_file(self, pdf_path, temp_file="/tmp/output.txt"):
         print("Parsing PDF " + pdf_path)
         resource_manager = PDFResourceManager()
         fake_file_handle = io.StringIO()
@@ -139,7 +139,7 @@ class PdfMinerParser:
         fake_file_handle.close()
 
         document_metadata = DocumentMetadata(source_path=pdf_path)
-        with open("/tmp/output.txt", "w") as text_file:
+        with open(temp_file, "w") as text_file:
             text_file.write(json.dumps(converter.root.children[0], indent=4, sort_keys=True))
 
         return Document(document_metadata, converter.root)
