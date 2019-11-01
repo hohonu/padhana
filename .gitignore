@@ -4,3 +4,7 @@ dist
 padhana.egg-info
 *.pyc
 tests/junit.xml
+pytest_runner*
+settings.json
+.pytest_cache
+junit.xml

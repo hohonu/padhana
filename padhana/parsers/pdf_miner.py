@@ -3,6 +3,8 @@ import imghdr
 import io
 import json
 import re
+import tempfile
+import os
 
 from pdfminer.converter import PDFConverter
 from pdfminer.layout import LTChar
@@ -121,7 +123,16 @@ class ContentNodeConverter(PDFConverter):
 
 class PdfMinerParser:
 
-    def parse_file(self, pdf_path, temp_file="/tmp/output.txt"):
+    def __init__(self, log_output = False, output_dir = None):
+
+        self.log_output = log_output
+        if(output_dir):
+            self.output_dir = output_dir
+        elif log_output and output_dir is None:
+            self.output_dir = tempfile.gettempdir()
+        return
+
+    def parse_file(self, pdf_path):
         print("Parsing PDF " + pdf_path)
         resource_manager = PDFResourceManager()
         fake_file_handle = io.StringIO()
@@ -138,8 +149,11 @@ class PdfMinerParser:
         converter.close()
         fake_file_handle.close()
 
-        document_metadata = DocumentMetadata(source_path=pdf_path)
-        with open(temp_file, "w") as text_file:
-            text_file.write(json.dumps(converter.root.children[0], indent=4, sort_keys=True))
+        if self.log_output:
+            temp_file = os.path.join(self.output_dir, 'padhana_output.txt')
+            print("Padhana output will be logged to: " + temp_file)
+            with open(temp_file, "w") as text_file:
+                text_file.write(json.dumps(converter.root.children[0], indent=4, sort_keys=True))
 
+        document_metadata = DocumentMetadata(source_path=pdf_path)
         return Document(document_metadata, converter.root)

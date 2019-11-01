@@ -9,14 +9,14 @@ def get_test_directory():
 
 
 def get_text_layout_analysis(filename):
-    parser = PdfMinerParser()
+    parser = PdfMinerParser(True)
     document = parser.parse_file(str(get_test_directory()) + filename + '.pdf')
     text_layout_analysis = TextLayoutAnalysis(document)
     return text_layout_analysis
 
 
 def get_line_layout_analysis(filename):
-    parser = PdfMinerParser()
+    parser = PdfMinerParser(True)
     document = parser.parse_file(str(get_test_directory()) + filename + '.pdf')
     line_layout_analysis = LineLayoutAnalysis(document)
     return line_layout_analysis
