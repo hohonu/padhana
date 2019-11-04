@@ -123,13 +123,8 @@ class ContentNodeConverter(PDFConverter):
 
 class PdfMinerParser:
 
-    def __init__(self, log_output = False, output_dir = None):
-
-        self.log_output = log_output
-        if(output_dir):
-            self.output_dir = output_dir
-        elif log_output and output_dir is None:
-            self.output_dir = tempfile.gettempdir()
+    def __init__(self, temp_dir = None):
+        self.temp_dir = temp_dir
         return
 
     def parse_file(self, pdf_path):
@@ -149,8 +144,8 @@ class PdfMinerParser:
         converter.close()
         fake_file_handle.close()
 
-        if self.log_output:
-            temp_file = os.path.join(self.output_dir, 'padhana_output.txt')
+        if self.temp_dir:
+            temp_file = os.path.join(self.temp_dir, 'padhana_output.txt')
             print("Padhana output will be logged to: " + temp_file)
             with open(temp_file, "w") as text_file:
                 text_file.write(json.dumps(converter.root.children[0], indent=4, sort_keys=True))
